@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="recruit">
+
+	<resultMap id="recruitVo" type="com.spring.recruit.vo.RecruitVo">
+	    <result property="seq" column="SEQ" />
+	    <result property="name" column="NAME" />
+	    <result property="birth" column="BIRTH" />
+	    <result property="gender" column="FIELD3" />
+	    <result property="phone" column="PHONE" />
+	    <result property="email" column="EMAIL" />
+	    <result property="addr" column="ADDR" />
+	    <result property="location" column="LOCATION" />
+	    <result property="workType" column="WORK_TYPE" />
+	    <result property="submit" column="SUBMIT" />
+	</resultMap>
+
+	<resultMap id="educationVoResultMap" type="com.spring.recruit.vo.EducationVo">
+	    <id property="eduSeq" column="EDU_SEQ" />
+	    <result property="seq" column="SEQ" />
+	    <result property="startPeriod" column="START_PERIOD" />
+	    <result property="endPeriod" column="END_PERIOD" />
+	    <result property="division" column="DIVISION" />
+	    <result property="schoolName" column="SCHOOL_NAME" />
+	    <result property="location" column="LOCATION" />
+	    <result property="major" column="MAJOR" />
+	    <result property="grade" column="GRADE" />
+	</resultMap>
+	
+	<resultMap id="careerVoResultMap" type="com.spring.recruit.vo.CareerVo">
+	    <id property="carSeq" column="CAR_SEQ" />
+	    <result property="seq" column="SEQ" />
+	    <result property="startPeriod" column="START_PERIOD" />
+	    <result property="endPeriod" column="END_PERIOD" />
+	    <result property="compName" column="COMP_NAME" />
+	    <result property="task" column="TASK" />
+	    <result property="location" column="LOCATION" />
+	    <result property="salary" column="SALARY" />
+	</resultMap>
+
+	<resultMap id="certificateVoResultMap" type="com.spring.recruit.vo.CertificateVo">
+	    <id property="certSeq" column="CERT_SEQ" />
+	    <result property="seq" column="SEQ" />
+	    <result property="qualifiName" column="QUALIFI_NAME" />
+	    <result property="acquDate" column="ACQU_DATE" />
+	    <result property="organizeName" column="ORGANIZE_NAME" />
+	</resultMap>
+	
+    <select id="findByNameAndPhone" parameterType="map" resultMap="recruitVo">
+	    SELECT * FROM RECRUIT
+	    WHERE NAME = #{name}
+	      AND PHONE = #{phone}
+	</select>
+    
+    <select id="findRecruitBySeq" parameterType="string" resultMap="recruitVo">
+	    SELECT * FROM RECRUIT WHERE SEQ = #{seq}
+	</select>
+	
+	<select id="findEducationListBySeq" parameterType="string"  resultMap="educationVoResultMap">
+	    SELECT * FROM EDUCATION WHERE SEQ = #{seq}
+	</select>
+	
+	<select id="findCareerListBySeq" parameterType="string" resultMap="careerVoResultMap">
+	    SELECT * FROM CAREER WHERE SEQ = #{seq}
+	</select>
+	
+	<select id="findCertificateListBySeq" parameterType="string" resultMap="certificateVoResultMap">
+	    SELECT * FROM CERTIFICATE WHERE SEQ = #{seq}
+	</select>
+    
+    
+
+	<!-- 1. 지원자 INSERT -->
+	<insert id="insertRecruit" parameterType="com.spring.recruit.vo.RecruitVo">
+	    INSERT INTO RECRUIT (
+	        SEQ, NAME, BIRTH, FIELD3, PHONE, EMAIL, ADDR, LOCATION, WORK_TYPE, SUBMIT
+	    ) VALUES (
+	        #{seq}, #{name}, #{birth}, #{gender}, #{phone}, #{email},
+	        #{addr}, #{location}, #{workType}, #{submit}
+	    )
+	</insert>
+	
+	<!-- 2. 지원자 UPDATE -->
+	<update id="updateRecruit" parameterType="com.spring.recruit.vo.RecruitVo">
+	    UPDATE RECRUIT
+	    SET
+	        NAME = #{name},
+	        BIRTH = #{birth},
+	        FIELD3 = #{gender},
+	        PHONE = #{phone},
+	        EMAIL = #{email},
+	        ADDR = #{addr},
+	        LOCATION = #{location},
+	        WORK_TYPE = #{workType},
+	        SUBMIT = #{submit}
+	    WHERE SEQ = #{seq}
+	</update>
+	
+	<!-- 3. 학력 삭제 및 삽입 -->
+	<delete id="deleteEducationBySeq" parameterType="string">
+	    DELETE FROM EDUCATION WHERE SEQ = #{seq}
+	</delete>
+	
+	<insert id="insertEducation" parameterType="com.spring.recruit.vo.EducationVo">
+	    INSERT INTO EDUCATION (
+	        EDU_SEQ, SEQ, START_PERIOD, END_PERIOD, DIVISION, SCHOOL_NAME, LOCATION, MAJOR, GRADE
+	    ) VALUES (
+	        #{eduSeq}, #{seq}, #{startPeriod}, #{endPeriod}, #{division},
+	        #{schoolName}, #{location}, #{major}, #{grade}
+	    )
+	</insert>
+	
+	<!-- 4. 경력 삭제 및 삽입 -->
+	<delete id="deleteCareerBySeq" parameterType="string">
+	    DELETE FROM CAREER WHERE SEQ = #{seq}
+	</delete>
+	
+<!-- 	<insert id="insertCareer" parameterType="com.spring.recruit.vo.CareerVo">
+	    INSERT INTO CAREER (
+	         CAR_SEQ, SEQ, START_PERIOD, END_PERIOD, COMP_NAME, TASK, LOCATION, SALARY
+	    ) VALUES (
+	        #{carSeq}, #{seq}, #{startPeriod}, #{endPeriod}, #{compName}, #{task}, #{location}, #{salary}
+	    )
+	</insert>  -->
+	
+	
+ 	<insert id="insertCareer" parameterType="com.spring.recruit.vo.CareerVo">
+	    INSERT INTO CAREER (
+	         CAR_SEQ, SEQ, START_PERIOD, END_PERIOD, COMP_NAME, TASK, LOCATION, SALARY
+	    ) VALUES (
+	        #{carSeq, jdbcType=VARCHAR},
+	        #{seq, jdbcType=VARCHAR},
+	        #{startPeriod, jdbcType=VARCHAR},
+	        #{endPeriod, jdbcType=VARCHAR},
+	        #{compName, jdbcType=VARCHAR},
+	        #{task, jdbcType=VARCHAR},
+	        #{location, jdbcType=VARCHAR},
+	        #{salary, jdbcType=VARCHAR}
+	    )
+	</insert>
+	
+	<!-- 5. 자격증 삭제 및 삽입 -->
+	<delete id="deleteCertificateBySeq" parameterType="string">
+	    DELETE FROM CERTIFICATE WHERE SEQ = #{seq}
+	</delete>
+	
+	<insert id="insertCertificate" parameterType="com.spring.recruit.vo.CertificateVo">
+	    INSERT INTO CERTIFICATE (
+	        CERT_SEQ, SEQ, QUALIFI_NAME, ACQU_DATE, ORGANIZE_NAME
+	    ) VALUES (
+	        #{certSeq}, #{seq}, #{qualifiName}, #{acquDate}, #{organizeName}
+	    )
+	</insert>
+	
+</mapper>
